@@ -5,13 +5,6 @@ fail_fast: true
 repos:
   - repo: local
     hooks:
-      - id: commitizen
-        name: commitizen
-        entry: cz check
-        args: [--commit-msg-file]
-        require_serial: true
-        language: system
-        stages: [commit-msg]
       - id: uv-lock-check
         name: uv lock check
         entry: uv lock

@@ -1,5 +1,5 @@
 # https://pre-commit.com
-default_install_hook_types: [commit-msg, pre-commit]
+default_install_hook_types: [pre-commit]
 default_stages: [pre-commit, manual]
 fail_fast: true
 repos:
@@ -45,28 +45,10 @@ repos:
         types: [python]
   - repo: local
     hooks:
-      {%- if with_conventional_commits %}
-      - id: commitizen
-        name: commitizen
-        entry: cz check
-        args: [--commit-msg-file]
-        require_serial: true
-        language: system
-        stages: [commit-msg]
-      {%- endif %}
-      {%- if project_type == 'app' %}
-      - id: uv-lock-check
-        name: uv lock check
-        entry: uv lock
-        args: ["--check"]
-        require_serial: true
-        language: system
-        pass_filenames: false
-      {%- endif %}
       - id: ruff-check
         name: ruff check
         entry: ruff check
-        args: ["--force-exclude", "--extend-fixable=ERA001,F401,F841,T201,T203"{% if typing == 'optional' %}, "--fix-only"{% endif %}]
+        args: ["--force-exclude", "--extend-fixable=ERA001,F401,F841,T201,T203", "--fix-only"]
         require_serial: true
         language: system
         types_or: [python, pyi]

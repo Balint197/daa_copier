@@ -70,7 +70,7 @@ xfail_strict = true
 [tool.ruff]  # https://docs.astral.sh/ruff/settings/
 fix = true
 line-length = 100
-src = ["tests"]
+src = ["src", "tests"]
 target-version = "py{{ python_version.split('.')[:2] | join }}"
 
 [tool.ruff.format]

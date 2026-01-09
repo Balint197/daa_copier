@@ -1,0 +1,13 @@
+# Agents Guide
+
+## Virtual commands
+- `poe lint` → run full pre-commit suite  
+- `poe test` → coverage-tracked pytest  
+- `poe profile` → create data-profiling HTML  
+
+## Coding Guidelines
+- Target Python {{ python_version }} (see `pyproject.toml`).  
+- Disallow old `typing.List`, `typing.Dict`; use built-ins.  
+- Line length 100; follow `ruff` auto-fix suggestions.  
+- Public functions need **NumPy-style** docstrings.  
+- Prefer vectorised `pandas` / `numpy` over Python loops.

@@ -2,31 +2,12 @@
 
 {{ project_description }}
 
-## Installing
-
-To install this package, run:
-
-```sh
-pip install {{ project_name_kebab_case }}
-```
-
-## Using
-
-Example usage:
-
-```python
-import {{ project_name_snake_case }}
-
-...
-```
-
-## Contributing
+## Development
 
 <details>
 <summary>Prerequisites</summary>
 
 1. [Install uv](https://docs.astral.sh/uv/getting-started/installation/).
-1. _Optional:_ install a [Nerd Font](https://www.nerdfonts.com/font-downloads) such as [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) and configure your editor to use it.
 
 </details>
 
@@ -37,10 +18,7 @@ Clone this repository and run the following from root of the repository:
 
 ```sh
 # Create and install a virtual environment
-uv sync --python {{ python_version }} --all-extras
-
-# Activate the virtual environment
-source .venv/bin/activate
+uv sync --all-extras
 
 # Install the pre-commit hooks
 pre-commit install --install-hooks

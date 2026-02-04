@@ -1,6 +1,9 @@
 # {{ project_name }}
 
 {{ project_description }}
+{% if with_databricks %}
+> **Databricks Runtime {{ databricks_runtime }}** — Python and library versions are pinned to match this runtime.
+{% endif %}
 
 ## Development
 
@@ -8,6 +11,20 @@
 <summary>Prerequisites</summary>
 
 1. [Install uv](https://docs.astral.sh/uv/getting-started/installation/).
+{%- if with_databricks %}
+2. Install Java 17 (required for PySpark/Databricks Connect):
+   - **macOS**: 
+     ```sh
+     brew install openjdk@17
+     ```
+     Add to your shell profile (e.g., `~/.zshrc`):
+     ```sh
+     export JAVA_HOME="/opt/homebrew/opt/openjdk@17"
+     export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
+     ```
+   - **Ubuntu**: `sudo apt install openjdk-17-jdk`
+   - **Windows**: Download from [Adoptium](https://adoptium.net/)
+{%- endif %}
 
 </details>
 

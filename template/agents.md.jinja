@@ -1,12 +1,18 @@
 # Agents Guide
 
 ## Virtual commands
-- `poe lint` → run full pre-commit suite  
-- `poe test` → coverage-tracked pytest  
-- `poe profile` → create data-profiling HTML  
+- `uv run poe lint` → run full pre-commit suite  
+- `uv run poe test` → coverage-tracked pytest  
+- `uv run poe profile` → create data-profiling HTML  
 
 ## Coding Guidelines
-- Target Python {{ python_version }} (see `pyproject.toml`).  
+{%- if with_databricks %}
+- Target Databricks Runtime {{ databricks_runtime }} (Python {% if databricks_runtime == "17.3" or databricks_runtime == "16.4" %}3.12{% elif databricks_runtime == "15.4" %}3.11{% endif %}).
+- Use pinned pandas/numpy/pyarrow versions matching the runtime.
+- Prefer PySpark DataFrame API for large-scale data; use pandas for small datasets.
+{%- else %}
+- Target Python {{ python_version }} (see `pyproject.toml`).
+{%- endif %}
 - Disallow old `typing.List`, `typing.Dict`; use built-ins.  
 - Line length 100; follow `ruff` auto-fix suggestions.  
 - Public functions need **NumPy-style** docstrings.  

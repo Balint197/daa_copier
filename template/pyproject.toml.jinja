@@ -10,8 +10,34 @@ readme = "README.md"
 authors = [
   { name = "{{ author_name }}" },
 ]
+{%- if with_databricks %}
+{# Databricks Runtime version pinning: https://docs.databricks.com/release-notes/runtime/ #}
+{%- if databricks_runtime == "17.3" %}
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "pandas>=2.3.2,<3",
+  "pyarrow>=18.0.0,<19",
+  "numpy>=2.1.0,<3",
+]
+{%- elif databricks_runtime == "16.4" %}
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "pandas>=2.3.2,<3",
+  "pyarrow>=17.0.0,<18",
+  "numpy>=1.26.4,<2",
+]
+{%- elif databricks_runtime == "15.4" %}
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "pandas>=2.3.2,<3",
+  "pyarrow>=16.1.0,<17",
+  "numpy>=1.26.4,<2",
+]
+{%- endif %}
+{%- else %}
 requires-python = ">={{ python_version }},<4.0"
 dependencies = []
+{%- endif %}
 
 [project.urls]  # https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels
 homepage = "{{ project_url }}"
@@ -27,6 +53,7 @@ dev = [
   "poethepoet (>=0.32.1)",
   "pre-commit (>=4.0.1)",
   "pytest (>=8.3.4)",
+  "pytest-cov (>=6.0.0)",
   "pytest-mock (>=3.14.0)",
   "pytest-xdist (>=3.6.1)",
   "ruff (>=0.9.2)",
@@ -68,7 +95,15 @@ venvPath = "."
 venv = ".venv"
 include = ["src", "tests"]
 exclude = ["**/node_modules", "**/__pycache__", "**/.*", "reports"]
+{%- if with_databricks %}
+{%- if databricks_runtime == "17.3" or databricks_runtime == "16.4" %}
+pythonVersion = "3.12"
+{%- elif databricks_runtime == "15.4" %}
+pythonVersion = "3.11"
+{%- endif %}
+{%- else %}
 pythonVersion = "{{ python_version }}"
+{%- endif %}
 typeCheckingMode = "standard"                                          # standard, basic, strict
 reportMissingTypeStubs = false
 reportUnknownMemberType = false
@@ -85,7 +120,15 @@ xfail_strict = true
 fix = true
 line-length = 100
 src = ["src", "tests"]
+{%- if with_databricks %}
+{%- if databricks_runtime == "17.3" or databricks_runtime == "16.4" %}
+target-version = "py312"
+{%- elif databricks_runtime == "15.4" %}
+target-version = "py311"
+{%- endif %}
+{%- else %}
 target-version = "py{{ python_version.split('.')[:2] | join }}"
+{%- endif %}
 
 [tool.ruff.format]
 docstring-code-format = true
@@ -100,6 +143,7 @@ ignore = [
   "D203",    # One blank line before class docstring (conflicts with D211)
   "D213",    # Multi-line docstring summary on second line (conflicts with D212)
   "E501",    # Line too long (handled by formatter)
+  "FBT002",  # Boolean default positional argument in function definition
   "FBT003",  # Boolean positional argument
   "FIX",     # Fixme comments
   "N812",    # Lowercase imported as non-lowercase (PySpark convention: import functions as F)
@@ -123,6 +167,9 @@ ban-relative-imports = "all"
 [tool.ruff.lint.isort]
 split-on-trailing-comma = false
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["PLR0913"]  # Too many arguments
+
 [tool.ruff.lint.pycodestyle]
 max-doc-length = 100
 
@@ -133,6 +180,10 @@ convention = "numpy"
 type = "simple"
 
 [tool.poe.tasks]
+
+  [tool.poe.tasks.check]
+  help = "Run ruff linter check"
+  cmd = "ruff check src tests"
 
   [tool.poe.tasks.lint]
   help = "Lint this package"

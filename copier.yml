@@ -31,6 +31,22 @@ python_version:
   type: str
   help: What is the minimum Python version your package should support?
   default: "3.10"
+  when: "{{ not with_databricks }}"
+
+with_databricks:
+  type: bool
+  default: false
+  help: Does this project use Databricks?
+
+databricks_runtime:
+  type: str
+  default: "16.4"
+  choices:
+    - "15.4"
+    - "16.4"
+    - "17.3"
+  when: "{{ with_databricks }}"
+  help: Which Databricks Runtime version?
 
 author_name:
   when: false
